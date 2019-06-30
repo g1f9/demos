@@ -224,6 +224,11 @@ function proxy(vm, sKey, key) {
   };
   Object.defineProperty(vm, key, descriptor);
 }
+function forEachValue(obj, fn) {
+  for (const key of Object.keys(obj)) {
+    fn(obj[key], key);
+  }
+}
 function mixin(vm) {
   let data = vm.data;
   if (data) {
@@ -231,17 +236,11 @@ function mixin(vm) {
       proxy(vm, "data", key);
     }
   }
+  let computed = vm.computed;
+  forEachValue(computed, function(getter, key) {
+    new Watcher(vm, getter);
+    Object.defineProperty(vm, key, {
+      get: () => getter.call(vm)
+    });
+  });
 }
-let vm = {
-  data: { a: 1, b: 2 },
-  computed: {
-    c() {
-      return this.a + this.b;
-    }
-  }
-};
-mixin(vm);
-new Observer(vm.data);
-new Watcher(vm, function() {
-  console.log("do render", this.a);
-});
