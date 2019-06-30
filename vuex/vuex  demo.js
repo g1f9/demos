@@ -57,15 +57,6 @@ class Store {
   get state() {
     return this._vm._data.$$state;
   }
-  // registerMutation 相当于一次柯里化的过程，把 state 固定 commit 的在第一个参数上
-  // 我们通常通过 commit('mutations','payload')，而我们定义时是 muta(state,payload)，通过 registerMutation 进行一次柯里化
-  /*
-    curry(state,fn){
-      return function(payload){
-        return fn.call(null,state,payload)
-      }
-    }
-  */
   installModule(store, state, options) {
     forEachValue(options.mutations, (fn, key) => {
       registerMutation(store, state, fn, key);
@@ -153,7 +144,6 @@ let storeData = {
   },
   getters: {
     b(state) {
-      debugger;
       return state.a + 10;
     }
   },
