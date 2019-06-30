@@ -196,6 +196,7 @@ class Observer {
 
 function defineReactive(target, key) {
   const dep = new Dep();
+  //有时是 get 函数，为了简化，这里并未处理这种情况因此 computed 也是简单处理
   let val = target[key];
   Object.defineProperty(target, key, {
     enumerable: true,

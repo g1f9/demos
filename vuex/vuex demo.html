@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script src="./vuex  demo.js"></script>
+</head>
+<body>
+  <div id="app"></div>
+  <button id="btn">add a</button>
+  <script>
+  let storeData = {
+  state: { a: 1,b:1 },
+  mutations: {
+    setA(state, payload) {
+      state.a = payload;
+    }
+  },
+  getters: {
+    c(state) {
+      return state.a + state.b;
+    }
+  },
+  actions: {
+    getAsync({ commit }) {
+      setTimeout(() => {
+        commit("setA", 30);
+      }, 3000);
+    }
+  }
+};
+let store = new Store(storeData);
+let vue = new Vue({
+    el:'#app',
+    render(h){
+      return h('div',`${store.state.a} + ${store.state.b} = ${store.getters.c}`)
+    }
+  })
+  let btn = document.getElementById('btn')
+  btn.addEventListener('click',()=>{
+    let a = store.state.a;
+    store.commit('setA',a+1)
+  })
+  </script>
+</body>
+</html>

@@ -94,7 +94,7 @@ class Store {
         return this._data.$$state;
       },
       () => {
-        console.log("debugger commiting ----", store._commiting);
+        console.log("watcher callback");
         if (!store._commiting) {
           console.warn("do not mutate vuex store outsize mutation handlers");
         }
@@ -115,8 +115,9 @@ class Store {
   }
   _withCommit(fn) {
     let commiting = this._commiting;
-    this.commiting = true;
+    this._commiting = true;
     fn();
+    console.log("after handler");
     this._commiting = commiting;
   }
   dispatch(type, payload) {
@@ -134,25 +135,3 @@ class Store {
       : entry[0](payload);
   }
 }
-
-let storeData = {
-  state: { a: 1 },
-  mutations: {
-    setA(state, payload) {
-      state.a = payload;
-    }
-  },
-  getters: {
-    b(state) {
-      return state.a + 10;
-    }
-  },
-  actions: {
-    getAsync({ commit }) {
-      setTimeout(() => {
-        commit("setA", 30);
-      }, 3000);
-    }
-  }
-};
-let store = new Store(storeData);
